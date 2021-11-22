@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,10 +16,12 @@ import org.springframework.http.HttpHeaders;
 
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "*") 
 public class UserController {
 
     private final PasswordEncoder passwordEncoder;
@@ -64,12 +67,28 @@ public class UserController {
     	return user;
     }
     
+    @GetMapping("/userlist")
+    public List<User> showUser(){
+    	List<User> user_list=userRepository.findAll();
+    	return user_list;
+    }
+    
+    
     //X-AUTH-TOKEN 을 넣어야 정상적이게 작동한다. 
     @GetMapping("/user/hello")
     public String user(@RequestBody User user,@RequestHeader HttpHeaders headers){
     	System.out.println(headers.toString());
         return "www";
     }
+   
+    @CrossOrigin(origins = "http://localhost:8081") 
+    @PostMapping("/user/api")
+    public String userApitest(@RequestHeader HttpHeaders headers){
+    	System.out.println("hello world");
+    	System.out.println(headers.toString());
+        return "www";
+    }
+
 
     @GetMapping("/educator/www")
     public String wwww(@RequestBody User user){
