@@ -83,11 +83,31 @@ public class UserController {
    
     @CrossOrigin(origins = "http://localhost:8081") 
     @PostMapping("/user/api")
-    public String userApitest(@RequestHeader HttpHeaders headers){
-    	System.out.println("hello world");
-    	System.out.println(headers.toString());
+    public String userApitest(@RequestHeader(value="X-AUTH-TOKEN") String token){
+    	System.out.println(token);
+    	String info=jwtTokenProvider.getUserPk(token);
+    	System.out.println(info);
         return "www";
     }
+
+    
+//    @CrossOrigin(origins = "http://localhost:8081") 
+//    @PostMapping("/user/api")
+//    public String userApitest(@RequestHeader HttpHeaders headers){
+//    	System.out.println("hello world");
+//    	System.out.println(headers.toString());
+//        return "www";
+//    }
+
+    
+//    추후 보드에 사용핤것
+//    @CrossOrigin(origins = "http://localhost:8081") 
+//    @PostMapping("/user/api")
+//    public String userApitest(@RequestHeader(value="X-AUTH-TOKEN") String token){
+//    	String email=jwtTokenProvider.getUserPk(token);
+//    	System.out.println(email);
+//        return "www";
+//    }
 
 
     @GetMapping("/educator/www")
