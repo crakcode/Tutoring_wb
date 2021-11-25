@@ -22,22 +22,23 @@ import tutoring.security.User;
 @Entity
 @Getter
 @Setter
-@Table(name = "lecture")
-public class Lecture {
+@Table(name = "Review")
+public class Review {
 	
 	@Id 
 	@GeneratedValue
-	@Column(name = "l_id")
-	private Long Id;
+	@Column(name = "r_id")
+	private Long rId;
 	
-	private String title;
-	
-	private String content;
+	private String comment;
 	
 	private int score;
 	
-	private String imgsrc;
+	@ManyToOne
+	@JoinColumn(name = "l_id")
+	private Lecture lecture;	
 
+	
 	@ManyToOne
 	@JoinColumn(name = "u_id")
 	private User user;	

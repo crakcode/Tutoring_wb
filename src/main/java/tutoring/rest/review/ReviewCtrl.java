@@ -1,8 +1,10 @@
-package tutoring.rest.lecture;
+package tutoring.rest.review;
 
 import lombok.RequiredArgsConstructor;
 import tutoring.dao.lecture.LectureRepository;
+import tutoring.dao.review.ReviewRepository;
 import tutoring.entity.Lecture;
+import tutoring.entity.Review;
 import tutoring.security.JwtTokenProvider;
 import tutoring.security.User;
 import tutoring.security.UserRepository;
@@ -22,8 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api/v1/lecture")
-public class LectureCtrl {
+@RequestMapping("/api/v1/review")
+public class ReviewCtrl {
 	
 	  @Autowired
 	  private LectureRepository lecReps;
@@ -34,19 +36,24 @@ public class LectureCtrl {
 	  @Autowired
 	  private  JwtTokenProvider jwtProvider;
 
+	  @Autowired
+	  private  ReviewRepository reviewReps;
+
 //	  @GetMapping("/list")
 //	  public List<Post> getAllPost(){
 //		  return postServ.getAllPost();
 //	  }
 //
-	  @PostMapping("/file")
-	  public String uploadSingle(@RequestParam("files") MultipartFile files) throws Exception {
-	      String rootPath = "C:/Users/forcs/git/Tutoring_wb/tutoring_web/src/main/resources/images";
-	      String basePath = rootPath + "/" + "single";
-	      String filePath = basePath + "/" + files.getOriginalFilename();
-	      File dest = new File(filePath);
-	      files.transferTo(dest); // 파일 업로드 작업 수행
-	      return "uploaded";
+	  @PostMapping("/write/{l_id}")
+	  public void uploadSingle(@PathVariable Long l_id,@RequestHeader(value="X-AUTH-TOKEN") String token,@RequestBody Review review) throws Exception {
+		  String email=jwtProvider.getUserPk(token);
+		  User user=userReps.findByEmail(email).get();
+		  Lecture lecture=lecReps.findById(l_id).get();
+		  
+		  review.setUser(user);
+		  review.setLecture(lecture);
+		  
+		  reviewReps.save(review);
 	  }
 	  
 	  @PostMapping("/write")
