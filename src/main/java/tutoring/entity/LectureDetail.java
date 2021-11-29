@@ -28,9 +28,9 @@ public class LectureDetail {
 	@Id 
 	@GeneratedValue
 	@Column(name = "ld_id")
-	private Long rdId;
+	private Long ldId;
 	
-	private String link;
+	private String imgsrc;
 	
 	@ManyToOne
 	@JoinColumn(name = "l_id")

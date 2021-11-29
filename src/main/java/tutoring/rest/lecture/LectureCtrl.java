@@ -2,18 +2,21 @@ package tutoring.rest.lecture;
 
 import lombok.RequiredArgsConstructor;
 import tutoring.dao.lecture.LectureRepository;
+import tutoring.dao.lectureDetail.LectureDetailRepository;
 import tutoring.entity.Lecture;
 import tutoring.security.JwtTokenProvider;
 import tutoring.security.User;
 import tutoring.security.UserRepository;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.swing.filechooser.FileSystemView;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,9 @@ public class LectureCtrl {
 	  private LectureRepository lecReps;
 	  
 	  @Autowired
+	  private LectureDetailRepository lecDetailReps;
+	  
+	  @Autowired
 	  private  UserRepository userReps;
 
 	  @Autowired
@@ -41,11 +47,13 @@ public class LectureCtrl {
 //
 	  @PostMapping("/file")
 	  public String uploadSingle(@RequestParam("files") MultipartFile files) throws Exception {
-	      String rootPath = "C:/Users/forcs/git/Tutoring_wb/tutoring_web/src/main/resources/images";
-	      String basePath = rootPath + "/" + "single";
-	      String filePath = basePath + "/" + files.getOriginalFilename();
+//	      String rootPath = new ClassPathResource("/static/images").getFile().getAbsolutePath();
+	      String rootPath = "C:/Users/forcs/git/Tutoring_wb/tutoring_web/src/main/resources/static/images";
+	      String filePath = rootPath + "/" + files.getOriginalFilename();
 	      File dest = new File(filePath);
 	      files.transferTo(dest); // 파일 업로드 작업 수행
+	      
+	      String path="http://localhost:8080/static/images"+files.getOriginalFilename();
 	      return "uploaded";
 	  }
 	  
@@ -56,12 +64,16 @@ public class LectureCtrl {
 		  User user=userReps.findByEmail(email).get();
 		  lecture.setUser(user);
 		  lecReps.save(lecture);
+		  System.out.println(lecture.getId());
+		  
 	  }
 //
-//	  @GetMapping("/{id}")
-//	  public ResponseEntity<Post> getPostById(@PathVariable Long id){
-//		  return postServ.getPostById(id);
-//	  }
+	  @PostMapping("/read")
+	  public List<Lecture> readPost() {
+		  List<Lecture> lecture_list=new ArrayList<Lecture>();
+		  lecture_list=lecReps.findAll();
+		  return lecture_list;
+	  }
 ////    
 ////    
 //	  @PutMapping("/{id}")
