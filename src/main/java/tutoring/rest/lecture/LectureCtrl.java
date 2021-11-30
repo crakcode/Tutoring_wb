@@ -47,6 +47,7 @@ public class LectureCtrl {
 //
 	  @PostMapping("/file")
 	  public String uploadSingle(@RequestParam("files") MultipartFile files) throws Exception {
+		  System.out.println(files);
 //	      String rootPath = new ClassPathResource("/static/images").getFile().getAbsolutePath();
 	      String rootPath = "C:/Users/forcs/git/Tutoring_wb/tutoring_web/src/main/resources/static/images";
 	      String filePath = rootPath + "/" + files.getOriginalFilename();

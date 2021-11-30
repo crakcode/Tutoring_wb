@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -73,6 +75,15 @@ public class UserController {
     	return user_list;
     }
     
+    @PostMapping("/check/{email}")
+    public boolean CheckId(@PathVariable String email) {
+    	Optional<User> user=userRepository.findByEmail(email);
+    	if (user.isPresent()) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
     
     //X-AUTH-TOKEN 을 넣어야 정상적이게 작동한다. 
     @GetMapping("/user/hello")
